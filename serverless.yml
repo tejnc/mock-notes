@@ -1,0 +1,41 @@
+custom:
+  stage: dev
+  layer: bottle-intern-backend-dev-layers
+  service: bottle-intern-backend-dev-notes
+  deploymentBucket: bottle-intern-backend-deploy-${self:custom.stage}
+  developer: "Tej Narayan Chaudhary"
+  serverless-offline:
+    httpPort: 4000
+
+
+service: notes
+frameworkVersion: '2 || 3'
+useDotenv: true
+
+provider:
+  name: aws
+  runtime: python3.8
+  stage: ${self:custom.stage}
+  region: ap-south-1
+  profile: abc
+  iam:
+    role:
+      statements:
+        - Effect: "Allow"
+          Action:
+            - "s3:*"
+          Resource: "*"
+  lambdaHashingVersion: 20201221
+  environment:
+    PASS: ${env:DB_PASS}
+    DB: ${env:DB}
+
+functions:
+  - ${file(functions/index.yml)}
+
+plugins:
+  - serverless-offline
+  - serverless-python-requirements
+  - serverless-aws-documentation
+
+

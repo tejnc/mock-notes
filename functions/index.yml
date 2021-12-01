@@ -1,0 +1,8 @@
+AddNotes:
+  handler: functions/add_notes.main
+  description: api for adding notes
+  events:
+    - http:
+        path: add
+        method: post
+        cors: true
